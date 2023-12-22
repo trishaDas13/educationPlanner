@@ -6,10 +6,10 @@ function Planner() {
         let data = JSON.parse(localStorage.getItem('subjects'));
         return data || [];
     }
-
-  let [subject, setSubject] = useState("");
-  let [hour, setHour] = useState();
-  const [subjectList, setSubjectList] = useState(getData());
+    //todo ------- State varriables ------
+    let [subject, setSubject] = useState("");
+    let [hour, setHour] = useState();
+    const [subjectList, setSubjectList] = useState(getData());
 
     //todo -------add subject array ------
     function addSubject() {
@@ -25,6 +25,8 @@ function Planner() {
             localStorage.setItem('subjects',JSON.stringify(subList));
             return subList;
         })
+        setSubject("");
+        setHour("");
     }
 
     //todo ------- increase hours -------
@@ -48,13 +50,14 @@ function Planner() {
     }
     //todo ------- Delete subject -------
     function delSubject(idx){
-        let data = [...subjectList.splice(idx, 1)];
-        localStorage.removeItem(data);
+        subjectList.splice(idx, 1);
+        setSubjectList([...subjectList]);
+        localStorage.setItem('subjects', JSON.stringify([...subjectList]));
     }
 
   return (
     <>
-      <h2>📖  Education Planner</h2>
+      <h2>📖 Education Planner</h2>
       <div className="inputStore">
         <input 
             type="text" 
@@ -67,12 +70,14 @@ function Planner() {
             placeholder="Hours" 
             min={0}  
             value={hour}
-            onChange={(e) =>  setHour(e.target.value)}
+            onChange={(e) => setHour(e.target.value)}
         />
         <button onClick={addSubject}>Add Subject</button>        
       </div>
       <div className="subjectList">
-        
+        <p id="content"
+            style={{display: subjectList.length == 0 ? 'block' : 'none' }}
+        >No planner added yet</p>
             {
                 subjectList.map((subject, idx) =>{
                     return (
